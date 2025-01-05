@@ -12,9 +12,11 @@ The tokenization scheme have two parts:
 ## Algorithms & DataStructures
 Breakdow of the algorithms and the datastructures in the implementation of the tokenizer, althought the code is well documented.
 The file `./tokenizer.py` contains the `BPETokenizer` class which is the implementation of the **BPE** learner & segmenter algorithms. This class can be called with a corpus/string and it will "learn" the token vocabulary from it.
+Using unicode private area character `\uE000` is used as the **EOW** character
 ### BPE learner
-![Pseudo code of BPE learn algorithm](img/alg-learn.png)
-In the class `BPETokenizer` the function `__learn_BPE` with `__get_most_frequent_pair`, `__replace_each_ocurrence` are the BPE token vocabulary learn step implementation.
+![Pseudo code of BPE learn algorithm](img/alg-learn.png)  
+  
+In the class `BPETokenizer` the **function** `__learn_BPE()` with `__get_most_frequent_pair()`, `__replace_each_ocurrence()` are the BPE token vocabulary learn step implementation. Using `self.D` dictionary that accounts for all the frequencies, merge of tokens & token words during the learn. The produced vocabulary is store in the **set** `self.V`
 ```python
     def __learn_BPE(self, k: int, callback = None):
         """
@@ -98,6 +100,83 @@ In the class `BPETokenizer` the function `__learn_BPE` with `__get_most_frequent
 ```
 
 ### BPE segmenter
+The **segementer** step implementation is a personal interpretation of how should the tokens vocabulary be used to tokenize new strings. The implementation is carried on the function `segment_word()` or `segment_string()` that process the string and then feeds it to the *segment_word()* function.  
+
+#### Algorithm
+Simple explaination (suppouse that last word char is EOW)
+1. Start at the first character (pointer = 0).
+2. tokens = empty list
+3. While pointer < length_of(word):
+   3.1 Use trie to match characters starting at pointer.
+   3.2 Keep track of the last position where a valid token was found.
+   3.3 If you can’t match further characters:
+       - If a valid token was found:
+         add that token to tokens
+         pointer = end of that token
+       - Else:
+         add the single character at pointer to tokens
+         pointer = pointer + 1
+4. Return tokens
+
+### Trie Tree
+![Trie trie example](https://upload.wikimedia.org/wikipedia/commons/b/be/Trie_example.svg)  
+To improve the search of token matching while segmenting a word, its used a **custom implementation** of the [Trie Tree](https://en.wikipedia.org/wiki/Trie). It significantly improves pattern searching time complexity.
+The implementation is in the `tree.py` file:
+```python
+class TrieNode:
+    """
+    A node in the Trie tree, storing its children and a flag indicating
+    if the path to this node corresponds to a valid token (subword)
+    """
+    def __init__(self):
+        # Key: character, Value: TrieNode
+        self.children: dict[str, "TrieNode"]  = {}
+        # True the path from the root to this node represents token
+        self.is_token: bool = False
+
+class TrieTree:
+    """
+    A trie tree that supports inserting tokens (subwords)
+    and segmenting new words with greedy longest match strategy.
+
+    Example:
+                   [*]
+                 /  |  \
+               [t] [a] [l]
+              /     |     \
+    "to" <= [o*]   [p]    [o*] => "lo
+                    |        \
+         "app" <= [p*]      [w*] => "low"
+                    
+    """
+
+    root: TrieNode
+
+    def __init__(self, token_vocabulary: set[str]):
+        """
+        Build the trie by inserting every token from the BPE vocabulary
+
+        Parameter:
+            token_vocabulary: The set of BPE tokens.
+        """
+        self.root = TrieNode()
+        for token in token_vocabulary:
+            self.insert(token)
+
+    def insert(self, token: str) -> None:
+        """
+        Insert a single subword token into the trie.
+        
+        Parameter:
+            token: The subword string to insert (e.g., "lo", "th", "lowest").
+        """
+        node = self.root
+        for char in token:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_token = True
+```
 
 ## Use
 ### Import

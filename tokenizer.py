@@ -170,7 +170,7 @@ class BPETokenizer:
         left-to-right matching approach.
         
         Parameters
-            word: The word/string to segment (optionally including an EOW symbol).
+            word: The word/string to segment SHOULD CONTAIN as final character the EOW
 
         return: A list of tokens.
         """

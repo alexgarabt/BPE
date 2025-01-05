@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 class TrieNode:
     """
     A node in the Trie tree, storing its children and a flag indicating
