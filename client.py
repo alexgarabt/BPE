@@ -4,6 +4,10 @@ from tokenizer import BPETokenizer
 def iteration_progress(**kwargs):
     i = kwargs["i"]
     k = kwargs["k"]
+
+    #dictionary = kwargs["D"]
+    #vocabulary = kwargs["V"]
+
     # Print the % of the way
     if(i % 100 == 0):
         percentage = (i / k) * 100
@@ -12,6 +16,7 @@ def iteration_progress(**kwargs):
 if __name__ == "__main__": 
     filename = argv[1]
     print(f"Learning token vocabulary from: {filename}")
+    num_tokens = input("\nEnter number of tokens to learn (k) = ")
     with open(filename, "r", encoding="utf-8") as f:
         corpus = f.read()
 

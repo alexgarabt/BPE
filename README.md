@@ -9,6 +9,34 @@ The tokenization scheme have two parts:
 > The BPE token learner begins with a vocabulary that is just the set of all individual characters. It then examines the training corpus, chooses the two symbols that are most frequently adjacent (say ‘A’,‘B’), adds a new merged symbol ‘AB’ to the vocabulary, and replaces every adjacent ’A’ ’B’ in the corpus with the new ‘AB’. It continues to count and merge, creating new longer and longer character strings, until k merges have been done creating k novel tokens; k is thus a parameter of the algorithm. The resulting vocabulary consists of the original set of characters plus k new symbols.  
 > *Speech and Language Processing, Dan Jurafsky and James H. Martin*
 
+
+## Use
+The `BPETokenizer`, 
+- It takes a `string` as corpus from where to learn the **tokens/vocabulary**, 
+- How many tokens to produce in the vocabulary `t_vocabulary_size` its `k` in learn algorithm 
+- And `learn_callback` a funtion to be called on each iteration with the available information *(vocabulary, dictionary, iteration number and k)*
+
+### Example 
+This is a example from the simple `client.py` program that uses the tokenizer to learn a vocabulary from a file as corpus and then ask for sentence to tokenize with the given input strings and show the tokens `\uE000` is `EOW` character for words
+
+### Code example
+```python
+from tokenizer import BPETokenizer
+
+if __name__ == "__main__":
+    filename = "corpus.txt"
+    with open(filename, "r", encoding="utf-8") as f:
+        corpus = f.read()
+
+    # Learn step
+    tokenizer = BPETokenizer(corpus, t_vocabulary_size=500)
+    tokenizer.V # The learned vocabulary
+
+    # Tokenize new text step
+    string_raw = "hi alice how are you my dear friend"
+    tokens = tokenizer.segment_string(string_raw)
+```
+
 ## Algorithms & DataStructures
 Breakdow of the algorithms and the datastructures in the implementation of the tokenizer, althought the code is well documented.
 The file `./tokenizer.py` contains the `BPETokenizer` class which is the implementation of the **BPE** learner & segmenter algorithms. This class can be called with a corpus/string and it will "learn" the token vocabulary from it.
@@ -104,6 +132,8 @@ The **segementer** step implementation is a personal interpretation of how shoul
 
 #### Algorithm
 Simple explaination (suppouse that last word char is EOW)
+
+```text
 1. Start at the first character (pointer = 0).
 2. tokens = empty list
 3. While pointer < length_of(word):
@@ -117,10 +147,11 @@ Simple explaination (suppouse that last word char is EOW)
          add the single character at pointer to tokens
          pointer = pointer + 1
 4. Return tokens
+```
 
 ### Trie Tree
+To improve the search of token matching while segmenting a word, its used a **custom implementation** of the [Trie Tree](https://en.wikipedia.org/wiki/Trie). It significantly improves pattern searching time complexity.  
 ![Trie trie example](https://upload.wikimedia.org/wikipedia/commons/b/be/Trie_example.svg)  
-To improve the search of token matching while segmenting a word, its used a **custom implementation** of the [Trie Tree](https://en.wikipedia.org/wiki/Trie). It significantly improves pattern searching time complexity.
 The implementation is in the `tree.py` file:
 ```python
 class TrieNode:
@@ -177,8 +208,3 @@ class TrieTree:
             node = node.children[char]
         node.is_token = True
 ```
-
-## Use
-### Import
-### Simple client
-
