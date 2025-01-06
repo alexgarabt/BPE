@@ -16,12 +16,12 @@ def iteration_progress(**kwargs):
 if __name__ == "__main__": 
     filename = argv[1]
     print(f"Learning token vocabulary from: {filename}")
-    num_tokens = input("\nEnter number of tokens to learn (k) = ")
+    num_tokens = int(input("\nEnter number of tokens to learn (k) = "))
     with open(filename, "r", encoding="utf-8") as f:
         corpus = f.read()
 
     print("\nLearning tokens", end=": ...")
-    tokenizer = BPETokenizer(corpus, t_vocabulary_size=500 ,learn_callback=iteration_progress)
+    tokenizer = BPETokenizer(corpus, t_vocabulary_size=num_tokens ,learn_callback=iteration_progress)
     print(f"\nVocabulary length = {len(tokenizer.V)}\n")
 
     show_v = input("Want to display the learned token vocabulary? [Y/N]: ")

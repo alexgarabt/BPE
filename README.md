@@ -17,7 +17,10 @@ The `BPETokenizer`,
 - And `learn_callback` a funtion to be called on each iteration with the available information *(vocabulary, dictionary, iteration number and k)*
 
 ### Example 
-This is a example from the simple `client.py` program that uses the tokenizer to learn a vocabulary from a file as corpus and then ask for sentence to tokenize with the given input strings and show the tokens `\uE000` is `EOW` character for words
+This is a example from the simple `client.py` program that uses the tokenizer to learn a vocabulary from a file as corpus and then ask for sentence to tokenize with the given input strings and show the tokens `\uE000` is `EOW` character for words  
+[![Example of use](./img/thumbnail.png)](./img/example.webm)
+
+
 
 ### Code example
 ```python
