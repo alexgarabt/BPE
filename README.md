@@ -18,9 +18,8 @@ The `BPETokenizer`,
 
 ### Example 
 This is a example from the simple `client.py` program that uses the tokenizer to learn a vocabulary from a file as corpus and then ask for sentence to tokenize with the given input strings and show the tokens `\uE000` is `EOW` character for words  
-[![Example of use](./img/thumbnail.png)](./img/example.webm)
-
-
+  
+[![Example of use](https://vimeo.com/1044179944)](https://vimeo.com/1044179944)
 
 ### Code example
 ```python
