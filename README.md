@@ -20,7 +20,7 @@ The `BPETokenizer`,
 This is a example from the simple `client.py` program that uses the tokenizer to learn a vocabulary from a file as corpus and then ask for sentence to tokenize with the given input strings and show the tokens `\uE000` is `EOW` character for words  
     
 **VIDEO:**
-[![Example of use](./img/thumbnail.png)](https://vimeo.com/1044179944)
+https://github.com/user-attachments/assets/11641c46-8fa3-4b8b-8334-e4da25381c06
 
 ### Code example
 ```python
