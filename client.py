@@ -15,6 +15,7 @@ def iteration_progress(**kwargs):
 
 if __name__ == "__main__": 
     filename = argv[1]
+    new_eow = "_"
     print(f"Learning token vocabulary from: {filename}")
     num_tokens = int(input("\nEnter number of tokens to learn (k) = "))
     with open(filename, "r", encoding="utf-8") as f:
@@ -26,11 +27,13 @@ if __name__ == "__main__":
 
     show_v = input("Want to display the learned token vocabulary? [Y/N]: ")
     if show_v.upper() == "Y":
-        print("\nVOCABULARY:\n\n" + str(sorted(list(tokenizer.V))) + "\n") # print the learned vocabulary
+        tokens = [token.replace(BPETokenizer.EOW, new_eow) for token in list(tokenizer.V)]
+        print("\nVOCABULARY:\n\n" + str(tokens) + "\n") # print the learned vocabulary
 
     while True:
         print("\n-----------")
         sentence = input("Tokenize sentence => ")
         tokens = tokenizer.segment_string(sentence)
+        tokens = [token.replace(BPETokenizer.EOW, new_eow) for token in tokens]
         print("\nTokens =>\n" + str(tokens))
         print("-----------\n")
